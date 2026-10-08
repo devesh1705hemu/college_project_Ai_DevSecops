@@ -1,0 +1,9 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Sid": "ReadOnlyNamedApplicationSecret",
+    "Effect": "Allow",
+    "Action": ["secretsmanager:GetSecretValue"],
+    "Resource": "REPLACE_WITH_TERRAFORM_APPLICATION_SECRET_ARN"
+  }]
+}
