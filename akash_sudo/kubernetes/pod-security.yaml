@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: ai-devsecops
+data:
+  SECURITY_PROFILE: restricted
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: security-reference
+  namespace: ai-devsecops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-devsecops
+  template:
+    metadata:
+      labels:
+        app: ai-devsecops
+    spec:
+      serviceAccountName: app
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: app
+          image: REPLACE_WITH_ECR_DIGEST
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
